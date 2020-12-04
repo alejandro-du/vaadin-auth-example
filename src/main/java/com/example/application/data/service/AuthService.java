@@ -18,11 +18,11 @@ import java.util.List;
 public class AuthService {
 
     public record AuthorizedRoute(String route, String name, Class<? extends Component> view) {
-    }
 
+    }
     public class AuthException extends Exception {
-    }
 
+    }
 
     private final UserRepository userRepository;
 
@@ -61,6 +61,10 @@ public class AuthService {
         }
 
         return routes;
+    }
+
+    public void register(String username, String password) {
+        userRepository.save(new User(username, password, Role.USER));
     }
 
 }

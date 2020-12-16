@@ -47,7 +47,7 @@ public class RegisterView extends Composite {
             Notification.show("Passwords don't match");
         } else {
             authService.register(username, password1);
-            Notification.show("Registration succeeded.");
+            Notification.show("Check the log.");
         }
     }
 }

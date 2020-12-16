@@ -13,6 +13,8 @@ public class User extends AbstractEntity {
     private String passwordSalt;
     private String passwordHash;
     private Role role;
+    private String activationCode;
+    private boolean active;
 
     public User() {
     }
@@ -22,6 +24,7 @@ public class User extends AbstractEntity {
         this.role = role;
         this.passwordSalt = RandomStringUtils.random(32);
         this.passwordHash = DigestUtils.sha1Hex(password + passwordSalt);
+        this.activationCode = RandomStringUtils.randomAlphanumeric(32);
     }
 
     public boolean checkPassword(String password) {
@@ -58,5 +61,21 @@ public class User extends AbstractEntity {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

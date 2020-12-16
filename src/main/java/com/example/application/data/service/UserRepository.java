@@ -7,4 +7,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User getByUsername(String username);
 
+    User getByActivationCode(String activationCode);
 }

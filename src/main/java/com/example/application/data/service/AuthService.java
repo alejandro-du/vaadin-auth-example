@@ -20,6 +20,7 @@ public class AuthService {
     public record AuthorizedRoute(String route, String name, Class<? extends Component> view) {
 
     }
+
     public class AuthException extends Exception {
 
     }
@@ -32,7 +33,7 @@ public class AuthService {
 
     public void authenticate(String username, String password) throws AuthException {
         User user = userRepository.getByUsername(username);
-        if (user != null && user.checkPassword(password)) {
+        if (user != null && user.checkPassword(password) && user.isActive()) {
             VaadinSession.getCurrent().setAttribute(User.class, user);
             createRoutes(user.getRole());
         } else {
@@ -64,7 +65,18 @@ public class AuthService {
     }
 
     public void register(String username, String password) {
-        userRepository.save(new User(username, password, Role.USER));
+        User user = userRepository.save(new User(username, password, Role.USER));
+        System.out.println("http://localhost:8080/activate?code=" + user.getActivationCode());
+    }
+
+    public void activate(String activationCode) throws AuthException {
+        User user = userRepository.getByActivationCode(activationCode);
+        if (user != null) {
+            user.setActive(true);
+            userRepository.save(user);
+        } else {
+            throw new AuthException();
+        }
     }
 
 }

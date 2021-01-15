@@ -9,6 +9,8 @@ import com.example.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.server.VaadinSession;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,9 +28,11 @@ public class AuthService {
     }
 
     private final UserRepository userRepository;
+    private final MailSender mailSender;
 
-    public AuthService(UserRepository userRepository) {
+    public AuthService(UserRepository userRepository, MailSender mailSender) {
         this.userRepository = userRepository;
+        this.mailSender = mailSender;
     }
 
     public void authenticate(String username, String password) throws AuthException {
@@ -64,9 +68,15 @@ public class AuthService {
         return routes;
     }
 
-    public void register(String username, String password) {
-        User user = userRepository.save(new User(username, password, Role.USER));
-        System.out.println("http://localhost:8080/activate?code=" + user.getActivationCode());
+    public void register(String email, String password) {
+        User user = userRepository.save(new User(email, password, Role.USER));
+        String text = "http://localhost:8080/activate?code=" + user.getActivationCode();
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("noreply@example.com");
+        message.setSubject("Confirmation email");
+        message.setText(text);
+        message.setTo(email);
+        mailSender.send(message);
     }
 
     public void activate(String activationCode) throws AuthException {

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Route("activate")
-public class ActivationView extends Composite implements BeforeEnterObserver {
+public class ActivationView extends Composite<Component> implements BeforeEnterObserver {
 
     private VerticalLayout layout;
 
